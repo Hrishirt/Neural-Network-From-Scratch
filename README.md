@@ -91,5 +91,13 @@ where $\alpha$ is the learning rate.
 ---
 
 # Issues:
-Currently this has a pretty low accuracy, and I hope to improve it with some time.  
-As of right now it's stuck at 10% :(
+~~Currently this has a pretty low accuracy, and I hope to improve it with some time~~.  
+~~As of right now it's stuck at 10% :(~~
+It now gets about 95% on the test set. The root cause was that the raw pixel values (0–255) created extremely large activations early in the network.
+This pushed the softmax outputs into saturation, which collapsed the gradients and prevented learning entirely.
+The solution I've figured out (or so forgot to do) was to normalize the dataset. 
+Normalizing the input to [0,1] fixed the numerical instability:
+- activations remained in a reasonable range
+- softmax produced meaningful class probabilities
+- gradients flowed correctly
+
